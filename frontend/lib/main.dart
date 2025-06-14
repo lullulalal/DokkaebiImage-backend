@@ -7,6 +7,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+import 'package:DokkaebieImage/footer/privacy_policy.dart';
+import 'package:DokkaebieImage/footer/cookie_preferences.dart';
+import 'package:DokkaebieImage/footer/terms_of_use.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -51,14 +55,309 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
   //int _counter = 0;
   //String _apiResponse = '';
 
-  // Map<String, dynamic> stringsData = {};
+  Widget? _currentBody;
+  int numberOfTools = 5;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   loadStringsData();
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _currentBody = _buildMainContent();
+  }
 
+  void moveTool(int index) {
+    print('Clicked tool ${index + 1}');
+
+    // Navigator 이동
+    // Navigator.of(context).push(MaterialPageRoute(
+    //   builder: (_) => ToolDetailPage(toolIndex: index),
+    // ));
+  }
+
+  Widget _buildMainContent() {
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          children: [
+            // Section 1
+            const SizedBox(height: 20),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1400),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'introduce_header'.tr(),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        'introduce'.tr(),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                            height: 1.6,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 40), // Gap Text and Wrap
+                    Wrap(
+                      spacing: 16,
+                      runSpacing: 16,
+                      children: List.generate(numberOfTools, (index) {
+                        return Material(
+                          color: Colors.white,
+                          child: InkWell(
+                            onTap: () => moveTool(index),
+                            hoverColor: Colors.red[50],
+                            child: Container(
+                              width: 320,
+                              height: 150,
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/tool${index + 1}.png',
+                                        width: 60,
+                                        height: 60,
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Text(
+                                          'tool${index + 1}'.tr(),
+                                          textAlign: TextAlign.left,
+                                          style: GoogleFonts.inter(
+                                            textStyle: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'tool${index + 1}_description'.tr(),
+                                    textAlign: TextAlign.left,
+                                    style: GoogleFonts.inter(
+                                      textStyle: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Section 2
+            const SizedBox(height: 35),
+            Container(
+              width: double.infinity,
+              color: Colors.white,
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 32,
+                        children: [
+                          Image.asset('images/logo.png', height: 90),
+                          Text(
+                            'explain_header'.tr(),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.inter(
+                              textStyle: const TextStyle(
+                                fontSize: 36,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Text(
+                          'explain'.tr(),
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.inter(
+                            textStyle: const TextStyle(
+                              fontSize: 20,
+                              height: 1.6,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const FaIcon(FontAwesomeIcons.linkedin),
+                            color: const Color(0xFF0A66C2),
+                            iconSize: 22,
+                            tooltip: 'LinkedIn',
+                            onPressed: () async {
+                              const url =
+                                  'https://www.linkedin.com/in/minsu-seo-6b77a3112/';
+                              if (await canLaunchUrl(Uri.parse(url))) {
+                                await launchUrl(
+                                  Uri.parse(url),
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              }
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            icon: const FaIcon(FontAwesomeIcons.solidEnvelope),
+                            color: Colors.black87,
+                            iconSize: 22,
+                            tooltip: 'Email',
+                            onPressed: () async {
+                              const email = 'mailto:lullulalal@gmail.com';
+                              if (await canLaunchUrl(Uri.parse(email))) {
+                                await launchUrl(Uri.parse(email));
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Section 3
+            Container(
+              width: double.infinity,
+              color: Colors.transparent,
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.language,
+                        size: 20,
+                        color: Colors.black54,
+                      ),
+                      const SizedBox(width: 8),
+                      DropdownButton<Locale>(
+                        value: context.locale,
+                        underline: const SizedBox(),
+                        focusColor: Colors.transparent,
+                        items: const [
+                          DropdownMenuItem(
+                            value: Locale('en'),
+                            child: Text('English'),
+                          ),
+                          DropdownMenuItem(
+                            value: Locale('ko'),
+                            child: Text('한국어'),
+                          ),
+                        ],
+                        onChanged: (locale) {
+                          if (locale != null) {
+                            context.setLocale(locale);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '© 2025 Dokkaebi Image. All rights reserved.',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      textStyle: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 24,
+                    children: [
+                      _footerLink('privacy_policy'.tr(), () {
+                        setState(() {
+                          _currentBody = const PrivacyPolicyBody();
+                        });
+                      }),
+                      _footerLink('terms_of_use'.tr(), () {
+                        setState(() {
+                          _currentBody = const TermsOfUseBody();
+                        });
+                      }),
+                      _footerLink('cookie_preferences'.tr(), () {
+                        setState(() {
+                          _currentBody = const CookiePreferencesBody();
+                        });
+                      }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _footerLink(String label, VoidCallback onTap) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            textStyle: const TextStyle(
+              fontSize: 14,
+              color: Colors.black87,
+              decoration: TextDecoration.none,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
   // Future<void> loadStringsData() async {
   //   final jsonString = await rootBundle.loadString('assets/strings_en.json');
   //   setState(() {
@@ -91,21 +390,6 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
   //     });
   //   }
   // }
-
-  int numberOfTools = 5;
-
-  void moveTool(int index) {
-    print('Clicked tool ${index + 1}');
-
-    // Navigator 이동
-    // Navigator.of(context).push(MaterialPageRoute(
-    //   builder: (_) => ToolDetailPage(toolIndex: index),
-    // ));
-  }
-
-  List<String> _splitParagraphs(String text) {
-    return text.split('\n\n').map((e) => e.trim()).toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,12 +451,12 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: MouseRegion(
-          cursor: SystemMouseCursors.click, // 👈 손가락 커서
+          cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const DokkaebiImage()),
-              );
+              setState(() {
+                _currentBody = _buildMainContent();
+              });
             },
             child: Row(
               children: [
@@ -213,288 +497,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              // Section 1
-              const SizedBox(height: 20),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1400),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'introduce_header'.tr(),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          textStyle: const TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      ..._splitParagraphs('introduce'.tr()).map(
-                        (paragraph) => Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
-                          child: Text(
-                            paragraph,
-                            textAlign: TextAlign.left,
-                            style: GoogleFonts.inter(
-                              textStyle: const TextStyle(
-                                fontSize: 20,
-                                height: 1.6,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 40), // Gap Text and Wrap
-                      Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
-                        children: List.generate(numberOfTools, (index) {
-                          return Material(
-                            color: Colors.white,
-                            child: InkWell(
-                              onTap: () => moveTool(index),
-                              hoverColor: Colors.red[50],
-                              child: Container(
-                                width: 320,
-                                height: 150,
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/images/tool${index + 1}.png',
-                                          width: 60,
-                                          height: 60,
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Text(
-                                            'tool${index + 1}'.tr(),
-                                            textAlign: TextAlign.left,
-                                            style: GoogleFonts.inter(
-                                              textStyle: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      'tool${index + 1}_description'.tr(),
-                                      textAlign: TextAlign.left,
-                                      style: GoogleFonts.inter(
-                                        textStyle: const TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // Section 2
-              const SizedBox(height: 35),
-              Container(
-                width: double.infinity,
-                color: Colors.white,
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1000),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 32,
-                          children: [
-                            Image.asset('images/logo.png', height: 90),
-                            Text(
-                              'explain_header'.tr(),
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.inter(
-                                textStyle: const TextStyle(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
-                        ..._splitParagraphs('explain'.tr()).map(
-                          (paragraph) => Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: Text(
-                              paragraph,
-                              textAlign: TextAlign.left,
-                              style: GoogleFonts.inter(
-                                textStyle: const TextStyle(
-                                  fontSize: 20,
-                                  height: 1.6,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const FaIcon(FontAwesomeIcons.linkedin),
-                              color: const Color(0xFF0A66C2),
-                              iconSize: 22,
-                              tooltip: 'LinkedIn',
-                              onPressed: () async {
-                                const url =
-                                    'https://www.linkedin.com/in/minsu-seo-6b77a3112/';
-                                if (await canLaunchUrl(Uri.parse(url))) {
-                                  await launchUrl(
-                                    Uri.parse(url),
-                                    mode: LaunchMode.externalApplication,
-                                  );
-                                }
-                              },
-                            ),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              icon: const FaIcon(
-                                FontAwesomeIcons.solidEnvelope,
-                              ),
-                              color: Colors.black87,
-                              iconSize: 22,
-                              tooltip: 'Email',
-                              onPressed: () async {
-                                const email = 'mailto:lullulalal@gmail.com';
-                                if (await canLaunchUrl(Uri.parse(email))) {
-                                  await launchUrl(Uri.parse(email));
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              // Section 3
-              Container(
-                width: double.infinity,
-                color: Colors.transparent,
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.language,
-                          size: 20,
-                          color: Colors.black54,
-                        ),
-                        const SizedBox(width: 8),
-                        DropdownButton<Locale>(
-                          value: context.locale,
-                          underline: const SizedBox(),
-                          focusColor: Colors.transparent,
-                          items: const [
-                            DropdownMenuItem(
-                              value: Locale('en'),
-                              child: Text('English'),
-                            ),
-                            DropdownMenuItem(
-                              value: Locale('ko'),
-                              child: Text('한국어'),
-                            ),
-                          ],
-                          onChanged: (locale) {
-                            if (locale != null) {
-                              context.setLocale(locale);
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '© 2025 Dokkaebi Image. All rights reserved.',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
-                        textStyle: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 24,
-                      children: [
-                        Text(
-                          'privacy_policy'.tr(),
-                          style: GoogleFonts.inter(
-                            textStyle: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'terms_of_use'.tr(),
-                          style: GoogleFonts.inter(
-                            textStyle: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'cookie_preferences'.tr(),
-                          style: GoogleFonts.inter(
-                            textStyle: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: _currentBody,
       // body: Center(
       //   // Center is a layout widget. It takes a single child and positions it
       //   // in the middle of the parent.
