@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +29,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Dokkaebi Image',
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
-      // ),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
+      ),
       home: const DokkaebiImage(),
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
@@ -102,7 +101,33 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Image.asset('images/logo.png', height: 60),
+        title: Row(
+          children: [
+            const SizedBox(width: 12),
+            Text(
+              'Dokkaebi',
+              textAlign: TextAlign.left,
+              style: GoogleFonts.inter(
+                textStyle: const TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Text(
+              'Image',
+              textAlign: TextAlign.left,
+              style: GoogleFonts.inter(
+                textStyle: const TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -128,6 +153,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 10),
                       ..._splitParagraphs('introduce'.tr()).map(
                         (paragraph) => Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -148,20 +174,56 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                       Wrap(
                         spacing: 16,
                         runSpacing: 16,
-                        children: List.generate(8, (index) {
-                          return Container(
-                            width: 320,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Icon ${index + 1}',
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.white,
+                        children: List.generate(5, (index) {
+                          return Material(
+                            color: Colors.white,
+                            child: InkWell(
+                              onTap: () {
+                                // click
+                              },
+                              hoverColor: Colors.red[50],
+                              child: Container(
+                                width: 320,
+                                height: 150,
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/tool${index + 1}.png',
+                                          width: 60,
+                                          height: 60,
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: Text(
+                                            'tool${index + 1}'.tr(),
+                                            textAlign: TextAlign.left,
+                                            style: GoogleFonts.inter(
+                                              textStyle: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.black87,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      'tool${index + 1}_description'.tr(),
+                                      textAlign: TextAlign.left,
+                                      style: GoogleFonts.inter(
+                                        textStyle: const TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -177,23 +239,31 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
               Container(
                 width: double.infinity,
                 color: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 40),
+                padding: const EdgeInsets.all(16.0),
                 child: Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 1000),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'explain_header'.tr(),
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
-                            textStyle: const TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 32,
+                          children: [
+                            Image.asset('images/logo.png', height: 90),
+                            Text(
+                              'explain_header'.tr(),
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                textStyle: const TextStyle(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                         const SizedBox(height: 32),
                         ..._splitParagraphs('explain'.tr()).map(

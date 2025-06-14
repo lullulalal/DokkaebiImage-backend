@@ -1,9 +1,19 @@
 {
   "introduce_header": "Try out fun and interesting image tools!",
   "introduce": "Click on a tool to see more details and start using it.",
+  "tool1": "Color Transfer",
+  "tool1_description": "Transfer colors from one image to another to match style and create visual harmony.",
+  "tool2": "Remove Noise",
+  "tool2_description": "Reduce noise in images to enhance clarity and detail, making them look cleaner.",
+  "tool3": "Perspective Correction",
+  "tool3_description": "Correct the perspective of images to make them look more natural and aligned.",
+  "tool4": "Content-aware Resize",
+  "tool4_description": "Resize images by removing unimportant pixels, keeping key content safe.",
+  "tool5": "Saliency-aware Cropping",
+  "tool5_description": "Automatically crop images to keep the most important parts in focus.",
   "explain_header": "What is a Dokkaebi?",
   "explain": "In Korean folklore, a Dokkaebi is neither a ghost nor a human. They are mysterious beings who show up at night to play tricks, surprise people, or sometimes even help them.\n\nJust like a Dokkaebi, this web app is full of fun, unexpected image tools. You might find yourself thinking, “Wait, it can do that?” or “Haha, that’s actually funny.”\n\nMost of the tools here may not be essential for everyone — but for some people, they might be surprisingly useful.\n\nGot a cool idea? Feel free to reach out anytime.",
   "privacy_policy": "Privacy Policy",
   "terms_of_use": "Terms of Use",
-  "cookie_preferences": "Cookei Preferences"
+  "cookie_preferences": "Cookie Preferences"
 }
