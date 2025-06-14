@@ -92,6 +92,17 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
   //   }
   // }
 
+  int numberOfTools = 5;
+
+  void moveTool(int index) {
+    print('Clicked tool ${index + 1}');
+
+    // Navigator 이동
+    // Navigator.of(context).push(MaterialPageRoute(
+    //   builder: (_) => ToolDetailPage(toolIndex: index),
+    // ));
+  }
+
   List<String> _splitParagraphs(String text) {
     return text.split('\n\n').map((e) => e.trim()).toList();
   }
@@ -99,35 +110,108 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Row(
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            const SizedBox(width: 12),
-            Text(
-              'Dokkaebi',
-              textAlign: TextAlign.left,
-              style: GoogleFonts.inter(
-                textStyle: const TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
+            SizedBox(
+              height: 65,
+              child: DrawerHeader(
+                decoration: BoxDecoration(color: Colors.redAccent),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Tools',
+                      style: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close, color: Colors.white),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
-            Text(
-              'Image',
-              textAlign: TextAlign.left,
-              style: GoogleFonts.inter(
-                textStyle: const TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.red,
+            ...List.generate(numberOfTools, (index) {
+              return ListTile(
+                leading: Image.asset(
+                  'assets/images/tool${index + 1}.png',
+                  width: 24,
+                  height: 24,
                 ),
-              ),
-            ),
+                title: Text(
+                  'tool${index + 1}'.tr(),
+                  style: GoogleFonts.inter(
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                onTap: () => moveTool(index),
+              );
+            }),
           ],
         ),
+      ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: MouseRegion(
+          cursor: SystemMouseCursors.click, // 👈 손가락 커서
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const DokkaebiImage()),
+              );
+            },
+            child: Row(
+              children: [
+                const SizedBox(width: 12),
+                Text(
+                  'Dokkaebi',
+                  style: GoogleFonts.inter(
+                    textStyle: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Text(
+                  'Image',
+                  style: GoogleFonts.inter(
+                    textStyle: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.apps),
+              color: Colors.black87,
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -174,13 +258,11 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                       Wrap(
                         spacing: 16,
                         runSpacing: 16,
-                        children: List.generate(5, (index) {
+                        children: List.generate(numberOfTools, (index) {
                           return Material(
                             color: Colors.white,
                             child: InkWell(
-                              onTap: () {
-                                // click
-                              },
+                              onTap: () => moveTool(index),
                               hoverColor: Colors.red[50],
                               child: Container(
                                 width: 320,
@@ -343,6 +425,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                         DropdownButton<Locale>(
                           value: context.locale,
                           underline: const SizedBox(),
+                          focusColor: Colors.transparent,
                           items: const [
                             DropdownMenuItem(
                               value: Locale('en'),
