@@ -7,7 +7,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
 import 'package:archive/archive.dart';
 import 'package:DokkaebieImage/constants/api_constants.dart';
-import 'dart:typed_data';
 import 'dart:js_interop';
 import 'package:web/web.dart' as web;
 
@@ -83,14 +82,6 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
     });
   }
 
-  // Uint8List? _convertToPng(Uint8List originalBytes) {
-  //   final decoded = img.decodeImage(originalBytes);
-  //   if (decoded == null) return null;
-
-  //   final pngBytes = img.encodePng(decoded);
-  //   return Uint8List.fromList(pngBytes);
-  // }
-
   Future<void> _sendImagesAsZip() async {
     if (_images.isEmpty || _referenceImage == null) return;
 
@@ -133,6 +124,29 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
         _isProcessing = false;
       });
     }
+  }
+
+  Widget _exampleImageWithLabel(String label, String assetPath) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 188,
+          height: 250,
+          decoration: BoxDecoration(
+            border: Border.all(width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          clipBehavior: Clip.hardEdge,
+          child: Image.asset(assetPath, fit: BoxFit.cover),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
   }
 
   @override
@@ -405,37 +419,58 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.language,
-                          size: 20,
-                          color: Colors.black54,
+                    Text(
+                      'tool1_header2'.tr(),
+                      style: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w700,
                         ),
-                        const SizedBox(width: 8),
-                        DropdownButton<Locale>(
-                          value: context.locale,
-                          underline: const SizedBox(),
-                          focusColor: Colors.transparent,
-                          items: const [
-                            DropdownMenuItem(
-                              value: Locale('en'),
-                              child: Text('English'),
-                            ),
-                            DropdownMenuItem(
-                              value: Locale('ko'),
-                              child: Text('한국어'),
-                            ),
-                          ],
-                          onChanged: (locale) {
-                            if (locale != null) {
-                              context.setLocale(locale);
-                            }
-                          },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'tool1_contents2'.tr(),
+                      style: GoogleFonts.inter(
+                        textStyle: const TextStyle(
+                          fontSize: 20,
+                          height: 1.6,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    Wrap(
+                      spacing: 16,
+                      runSpacing: 24,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        _exampleImageWithLabel(
+                          'tool1_reference_img'.tr(),
+                          "assets/images/tool1/ref.jpg",
+                        ),
+                        _exampleImageWithLabel(
+                          'tool1_target_img'.tr(),
+                          "assets/images/tool1/target.jpg",
+                        ),
+                        _exampleImageWithLabel(
+                          'tool1_result_img'.tr(),
+                          "assets/images/tool1/result.jpg",
                         ),
                       ],
                     ),
+                  ],
+                ),
+              ),
+
+              Container(
+                width: double.infinity,
+                color: Colors.transparent,
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Text(
                       '© 2025 Dokkaebi Image. All rights reserved.',
                       textAlign: TextAlign.center,
