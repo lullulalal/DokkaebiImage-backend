@@ -16,7 +16,7 @@ class TermsOfUseBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'terms_of_use'.tr(),
+                'terms_of_use_header'.tr(),
                 style: GoogleFonts.inter(
                   textStyle: const TextStyle(
                     fontSize: 36,

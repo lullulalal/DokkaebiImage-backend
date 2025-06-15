@@ -16,7 +16,7 @@ class CookiePreferencesBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'cookie_preferences'.tr(),
+                'cookie_preferences_header'.tr(),
                 style: GoogleFonts.inter(
                   textStyle: const TextStyle(
                     fontSize: 36,

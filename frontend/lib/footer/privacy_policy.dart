@@ -16,7 +16,7 @@ class PrivacyPolicyBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'privacy_policy'.tr(),
+                'privacy_policy_header'.tr(),
                 style: GoogleFonts.inter(
                   textStyle: const TextStyle(
                     fontSize: 36,

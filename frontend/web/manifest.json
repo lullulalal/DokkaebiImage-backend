@@ -1,6 +1,6 @@
 {
-    "name": "frontend_ps",
-    "short_name": "frontend_ps",
+    "name": "DokkaebiImage",
+    "short_name": "DokkaebiImage",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

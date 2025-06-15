@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:convert';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:DokkaebieImage/footer/privacy_policy.dart';
 import 'package:DokkaebieImage/footer/cookie_preferences.dart';
 import 'package:DokkaebieImage/footer/terms_of_use.dart';
+
+import 'package:DokkaebieImage/body/color_transfer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dokkaebi Image',
+      title: 'DokkaebiImage',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
       ),
@@ -64,13 +63,18 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
     _currentBody = _buildMainContent();
   }
 
-  void moveTool(int index) {
-    print('Clicked tool ${index + 1}');
-
-    // Navigator 이동
-    // Navigator.of(context).push(MaterialPageRoute(
-    //   builder: (_) => ToolDetailPage(toolIndex: index),
-    // ));
+  void _showToolPage(int index) {
+    switch (index) {
+      case 0:
+        setState(() {
+          _currentBody = const ColorTransferBody();
+        });
+        break;
+      default:
+        setState(() {
+          _currentBody = _buildMainContent();
+        });
+    }
   }
 
   Widget _buildMainContent() {
@@ -102,7 +106,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: Text(
-                        'introduce'.tr(),
+                        'introduce_contents'.tr(),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           textStyle: const TextStyle(
@@ -121,7 +125,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                         return Material(
                           color: Colors.white,
                           child: InkWell(
-                            onTap: () => moveTool(index),
+                            onTap: () => _showToolPage(index),
                             hoverColor: Colors.red[50],
                             child: Container(
                               width: 320,
@@ -140,7 +144,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                                       const SizedBox(width: 16),
                                       Expanded(
                                         child: Text(
-                                          'tool${index + 1}'.tr(),
+                                          'tool${index + 1}_header'.tr(),
                                           textAlign: TextAlign.left,
                                           style: GoogleFonts.inter(
                                             textStyle: const TextStyle(
@@ -155,7 +159,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    'tool${index + 1}_description'.tr(),
+                                    'tool${index + 1}_contents'.tr(),
                                     textAlign: TextAlign.left,
                                     style: GoogleFonts.inter(
                                       textStyle: const TextStyle(
@@ -210,7 +214,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
-                          'explain'.tr(),
+                          'explain_contents'.tr(),
                           textAlign: TextAlign.left,
                           style: GoogleFonts.inter(
                             textStyle: const TextStyle(
@@ -314,17 +318,17 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                     alignment: WrapAlignment.center,
                     spacing: 24,
                     children: [
-                      _footerLink('privacy_policy'.tr(), () {
+                      _footerLink('privacy_policy_header'.tr(), () {
                         setState(() {
                           _currentBody = const PrivacyPolicyBody();
                         });
                       }),
-                      _footerLink('terms_of_use'.tr(), () {
+                      _footerLink('terms_of_use_header'.tr(), () {
                         setState(() {
                           _currentBody = const TermsOfUseBody();
                         });
                       }),
-                      _footerLink('cookie_preferences'.tr(), () {
+                      _footerLink('cookie_preferences_header'.tr(), () {
                         setState(() {
                           _currentBody = const CookiePreferencesBody();
                         });
@@ -372,7 +376,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
   // }
 
   // Future<void> _callFastApi() async {
-  //   final url = Uri.parse('http://127.0.0.1:8000/hello');
+  //   final url = Uri.parse('http://127.0.0.1:8000/colorTransfer');
   //   try {
   //     final response = await http.get(url);
   //     if (response.statusCode == 200) {
@@ -433,7 +437,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                   height: 24,
                 ),
                 title: Text(
-                  'tool${index + 1}'.tr(),
+                  'tool${index + 1}_header'.tr(),
                   style: GoogleFonts.inter(
                     textStyle: const TextStyle(
                       fontSize: 15,
@@ -442,7 +446,7 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
                     ),
                   ),
                 ),
-                onTap: () => moveTool(index),
+                onTap: () => _showToolPage(index),
               );
             }),
           ],
