@@ -20,6 +20,7 @@ class ColorTransferBody extends StatefulWidget {
 class _ColorTransferBodyState extends State<ColorTransferBody> {
   Map<String, Uint8List> _images = {};
   Uint8List? _referenceImage;
+  String _referenceImageName = "";
   String _apiResponseError = "";
   bool _isProcessing = false;
   Uint8List? _downloadableZip;
@@ -50,6 +51,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
     if (result != null && result.files.single.bytes != null) {
       setState(() {
         _referenceImage = result.files.single.bytes!;
+        _referenceImageName = result.files.single.name;
       });
     }
   }
@@ -92,7 +94,11 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
 
     final archive = Archive();
     archive.addFile(
-      ArchiveFile('reference.byte', _referenceImage!.length, _referenceImage!),
+      ArchiveFile(
+        _referenceImageName,
+        _referenceImage!.length,
+        _referenceImage!,
+      ),
     );
     for (final entry in _images.entries) {
       archive.addFile(
@@ -126,7 +132,11 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
     }
   }
 
-  Widget _exampleImageWithLabel(String label, String assetPath) {
+  Widget _exampleImageWithLabel(
+    String label,
+    String assetPath,
+    Color borderColor,
+  ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -134,8 +144,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
           width: 188,
           height: 250,
           decoration: BoxDecoration(
-            border: Border.all(width: 2),
-            borderRadius: BorderRadius.circular(8),
+            border: Border.all(width: 2, color: borderColor),
           ),
           clipBehavior: Clip.hardEdge,
           child: Image.asset(assetPath, fit: BoxFit.cover),
@@ -449,14 +458,17 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
                         _exampleImageWithLabel(
                           'tool1_reference_img'.tr(),
                           "assets/images/tool1/ref.jpg",
+                          Colors.black54,
                         ),
                         _exampleImageWithLabel(
                           'tool1_target_img'.tr(),
                           "assets/images/tool1/target.jpg",
+                          Colors.black54,
                         ),
                         _exampleImageWithLabel(
                           'tool1_result_img'.tr(),
                           "assets/images/tool1/result.jpg",
+                          Colors.black,
                         ),
                       ],
                     ),
