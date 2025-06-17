@@ -1,8 +1,7 @@
 # app/routes/color_transfer.py
 
-from fastapi import APIRouter, Request
-from fastapi.responses import StreamingResponse
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import APIRouter
+from fastapi import File, UploadFile
 from services.color_transfer_service import ColorTransferService
 from typing import List
 from fastapi.responses import JSONResponse
@@ -29,5 +28,5 @@ async def color_transfer(
     color_transfer_service = ColorTransferService(ref_bytes, targets_bytes, targets_fname)
     color_transfer_service.color_transfer()
     result = color_transfer_service.export_images_and_zip_base64()
-    
+
     return JSONResponse(content=result)

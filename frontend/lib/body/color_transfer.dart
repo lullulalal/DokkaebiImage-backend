@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
-import 'package:archive/archive.dart';
 import 'package:DokkaebieImage/constants/api_constants.dart';
 import 'dart:js_interop';
 import 'package:web/web.dart' as web;
