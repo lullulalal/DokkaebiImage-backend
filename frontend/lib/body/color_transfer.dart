@@ -74,6 +74,8 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
   }
 
   Future<void> _pickImages() async {
+    if (_images.length >= 6) return;
+
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: true,
@@ -85,6 +87,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
 
       for (final file in result.files) {
         if (file.bytes != null) {
+          if (_images.length + newImages.length >= 6) break;
           newImages[file.name] = file.bytes!;
         }
       }
