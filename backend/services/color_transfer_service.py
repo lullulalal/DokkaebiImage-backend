@@ -3,23 +3,20 @@ import cv2
 import os
 from io import BytesIO
 import zipfile
+import base64
 
 class ColorTransferService:
-	
-	def __init__(self, zip_file_bytes):
+
+	def __init__(self, ref_bytes, targets_bytes, targets_fname):
 		self.reference_cvimage = None
 		self.target_cvimages = []
 		self.target_cvimages_fpath = []
 
-		zip_stream = BytesIO(zip_file_bytes)
-		with zipfile.ZipFile(zip_stream, 'r') as zipf:
-			for name in zipf.namelist():
-				if name.startswith('targets/'):
-					self.target_cvimages.append(self._byte_to_cvimage(zipf.read(name)))
-					self.target_cvimages_fpath.append(name)
-				else:
-					self.reference_cvimage = self._byte_to_cvimage(zipf.read(name))
+		self.reference_cvimage = self._byte_to_cvimage(ref_bytes)
 
+		for i in range(len(targets_bytes)): 
+			self.target_cvimages.append(self._byte_to_cvimage(targets_bytes[i]))
+			self.target_cvimages_fpath.append(targets_fname[i])
 
 	def _byte_to_cvimage(self, img_bytes: bytes) -> np.ndarray:
 		img_arr = np.frombuffer(img_bytes, np.uint8)
@@ -52,14 +49,30 @@ class ColorTransferService:
 
 			self.target_cvimages[n] = cv2.cvtColor(self.target_cvimages[n], cv2.COLOR_LAB2BGR)
 
-	def export_images_to_zip(self) -> BytesIO:
+	def export_images_and_zip_base64(self) -> dict:
+		image_entries = []
+
 		zip_buffer = BytesIO()
 		with zipfile.ZipFile(zip_buffer, 'w') as zipf:
 			for n, img in enumerate(self.target_cvimages):
-				name, ext = os.path.splitext(os.path.basename(self.target_cvimages_fpath[n]) )
+				name, ext = os.path.splitext(os.path.basename(self.target_cvimages_fpath[n]))
 				success, encoded_img = cv2.imencode(ext, img)
 				if success:
 					img_bytes = encoded_img.tobytes()
+
+					# Add to zip
 					zipf.writestr(f'result/{name}{ext}', img_bytes)
+
+					# Add to images list as base64
+					image_entries.append({
+						"filename": f"{name}{ext}",
+						"data": base64.b64encode(img_bytes).decode('utf-8')
+					})
+
 		zip_buffer.seek(0)
-		return zip_buffer
+		zip_base64 = base64.b64encode(zip_buffer.read()).decode('utf-8')
+
+		return {
+			"images": image_entries,
+			"zip": zip_base64
+		}
