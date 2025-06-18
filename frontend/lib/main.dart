@@ -9,6 +9,7 @@ import 'package:DokkaebieImage/footer/cookie_preferences.dart';
 import 'package:DokkaebieImage/footer/terms_of_use.dart';
 
 import 'package:DokkaebieImage/body/color_transfer.dart';
+import 'package:DokkaebieImage/body/noise_remover.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,9 +65,10 @@ class _DokkaebiImageState extends State<DokkaebiImage> {
   void _showToolPage(int index) {
     switch (index) {
       case 0:
-        setState(() {
-          _currentBody = const ColorTransferBody();
-        });
+        setState(() { _currentBody = const ColorTransferBody(); });
+        break;
+      case 1:
+        setState(() { _currentBody = const NoiseRemoverBody(); });
         break;
       default:
         setState(() {

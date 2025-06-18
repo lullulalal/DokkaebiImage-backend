@@ -5,7 +5,7 @@ from io import BytesIO
 import zipfile
 import base64
 
-class ColorTransferService:
+class ColorTransferService():
 
 	def __init__(self, ref_bytes, targets_bytes, targets_fname):
 		self.reference_cvimage = None
@@ -27,7 +27,7 @@ class ColorTransferService:
 		x_mean, x_std = cv2.meanStdDev(x)
 		return x_mean.flatten(), x_std.flatten()  # shape: (3,)
 
-	def color_transfer(self):
+	def processing(self):
 		ref_mean, ref_std = self._get_mean_and_std(self.reference_cvimage)
 		ref_mean = ref_mean.reshape(1, 1, 3)
 		ref_std = ref_std.reshape(1, 1, 3)
@@ -43,7 +43,7 @@ class ColorTransferService:
 
 			self.target_cvimages[n] = cv2.cvtColor(adjusted, cv2.COLOR_LAB2BGR)
 
-	def export_images_and_zip_base64(self) -> dict:
+	def export_results_base64(self) -> dict:
 		image_entries = []
 
 		zip_buffer = BytesIO()

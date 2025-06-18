@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes import color_transfer
+from routes import noise_remover
 
 app = FastAPI()
 
@@ -15,3 +16,4 @@ app.add_middleware(
 )
 
 app.include_router(color_transfer.router)
+app.include_router(noise_remover.router)

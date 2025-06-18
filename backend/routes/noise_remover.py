@@ -1,21 +1,17 @@
-# app/routes/color_transfer.py
+# app/routes/noise_remover.py
 
 from fastapi import APIRouter
 from fastapi import File, UploadFile
-from services.color_transfer_service import ColorTransferService
+from services.noise_remover_service import NoiseRemoverService
 from typing import List
 from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
-@router.post("/colorTransfer")
+@router.post("/noiseRemover")
 async def color_transfer(
-    reference: UploadFile = File(...),
     targets: List[UploadFile] = File(...),
 ):
-    # Reference image
-    ref_bytes = await reference.read()
-
     # Target images
     targets_bytes = []
     targets_fname = []
@@ -25,7 +21,7 @@ async def color_transfer(
         targets_bytes.append(img_bytes)
         targets_fname.append(t.filename)
     
-    color_transfer_service = ColorTransferService(ref_bytes, targets_bytes, targets_fname)
+    color_transfer_service = NoiseRemoverService(targets_bytes, targets_fname)
     color_transfer_service.processing()
     result = color_transfer_service.export_results_base64()
 

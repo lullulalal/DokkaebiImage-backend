@@ -12,17 +12,15 @@ import 'package:web/web.dart' as web;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/gestures.dart';
 
-class ColorTransferBody extends StatefulWidget {
-  const ColorTransferBody({super.key});
+class NoiseRemoverBody extends StatefulWidget {
+  const NoiseRemoverBody({super.key});
 
   @override
-  State<ColorTransferBody> createState() => _ColorTransferBodyState();
+  State<NoiseRemoverBody> createState() => _NoiseRemoverBodyState();
 }
 
-class _ColorTransferBodyState extends State<ColorTransferBody> {
+class _NoiseRemoverBodyState extends State<NoiseRemoverBody> {
   Map<String, Uint8List> _images = {};
-  Uint8List? _referenceImage;
-
   String _apiResponseError = "";
   bool _isProcessing = false;
   Uint8List? _downloadableZip;
@@ -40,7 +38,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
 
     final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
     anchor.href = url;
-    anchor.download = 'result_color_transfer.zip';
+    anchor.download = 'result_noise_remover.zip';
     anchor.click();
     web.URL.revokeObjectURL(url);
   }
@@ -60,19 +58,6 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
     anchor.download = filename;
     anchor.click();
     web.URL.revokeObjectURL(url);
-  }
-
-  Future<void> _pickReferenceImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      withData: true,
-    );
-
-    if (result != null && result.files.single.bytes != null) {
-      setState(() {
-        _referenceImage = result.files.single.bytes!;
-      });
-    }
   }
 
   Future<void> _pickImages() async {
@@ -107,7 +92,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
   }
 
   Future<void> _sendImagesAsMultipart() async {
-    if (_images.isEmpty || _referenceImage == null) return;
+    if (_images.isEmpty) return;
 
     setState(() {
       _isProcessing = true;
@@ -116,16 +101,8 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
       _resultImages = {};
     });
 
-    final url = Uri.parse(ApiConstants.colorTransfer);
+    final url = Uri.parse(ApiConstants.noiseRemover);
     final request = http.MultipartRequest('POST', url);
-
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'reference',
-        _referenceImage!,
-        filename: "reference.img",
-      ),
-    );
 
     for (final entry in _images.entries) {
       request.files.add(
@@ -187,7 +164,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 188,
+          width: 250,
           height: 250,
           decoration: BoxDecoration(
             border: Border.all(width: 2, color: borderColor),
@@ -220,7 +197,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'tool1_header'.tr(),
+                      'tool2_header'.tr(),
                       style: GoogleFonts.inter(
                         textStyle: const TextStyle(
                           fontSize: 36,
@@ -230,7 +207,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'tool1_contents'.tr(),
+                      'tool2_contents'.tr(),
                       style: GoogleFonts.inter(
                         textStyle: const TextStyle(
                           fontSize: 20,
@@ -239,6 +216,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -266,78 +244,21 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
                             ),
                             children: [
                               TextSpan(
-                                text: 'Color Transfer between Images',
+                                text: 'BM3D Image Denoising',
                                 style: const TextStyle(
                                   decoration: TextDecoration.underline,
-                                ), 
+                                ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     launchUrl(
-                                      Uri.parse('https://doi.org/10.1109/38.946629'),
+                                      Uri.parse(
+                                        'https://doi.org/10.1109/TIP.2007.901238',
+                                      ),
                                       mode: LaunchMode.externalApplication,
                                     );
                                   },
                               ),
                             ],
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    // Reference Image
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (_referenceImage != null)
-                          Container(
-                            width: 340,
-                            height: 340,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 4,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            alignment: Alignment.center,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.memory(
-                                _referenceImage!,
-                                width: 320,
-                                height: 320,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _pickReferenceImage,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black87,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32,
-                              vertical: 20,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Text(
-                            'tool_upload_reference_image_btn'.tr(),
-                            style: GoogleFonts.inter(
-                              textStyle: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
                           ),
                         ),
                       ],
@@ -578,7 +499,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'tool1_header2'.tr(),
+                      'tool2_header2'.tr(),
                       style: GoogleFonts.inter(
                         textStyle: const TextStyle(
                           fontSize: 36,
@@ -588,7 +509,7 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'tool1_contents2'.tr(),
+                      'tool2_contents2'.tr(),
                       style: GoogleFonts.inter(
                         textStyle: const TextStyle(
                           fontSize: 20,
@@ -605,18 +526,13 @@ class _ColorTransferBodyState extends State<ColorTransferBody> {
                       alignment: WrapAlignment.center,
                       children: [
                         _exampleImageWithLabel(
-                          'tool_reference_img'.tr(),
-                          "assets/images/tool1/ref.jpg",
-                          Colors.black54,
-                        ),
-                        _exampleImageWithLabel(
                           'tool_target_img'.tr(),
-                          "assets/images/tool1/target.jpg",
+                          "assets/images/tool2/target.jpg",
                           Colors.black54,
                         ),
                         _exampleImageWithLabel(
                           'tool_result_img'.tr(),
-                          "assets/images/tool1/result.jpg",
+                          "assets/images/tool2/result.jpg",
                           Colors.black,
                         ),
                       ],
