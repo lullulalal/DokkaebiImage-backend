@@ -25,29 +25,23 @@ class ColorTransferService:
 		
 	def _get_mean_and_std(self, x: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 		x_mean, x_std = cv2.meanStdDev(x)
-		x_mean = np.hstack(np.around(x_mean,2))
-		x_std = np.hstack(np.around(x_std,2))
-		return x_mean, x_std
+		return x_mean.flatten(), x_std.flatten()  # shape: (3,)
 
 	def color_transfer(self):
 		ref_mean, ref_std = self._get_mean_and_std(self.reference_cvimage)
+		ref_mean = ref_mean.reshape(1, 1, 3)
+		ref_std = ref_std.reshape(1, 1, 3)
 
 		for n in range(len(self.target_cvimages)):
+			target = self.target_cvimages[n]
+			target_mean, target_std = self._get_mean_and_std(target)
+			target_mean = target_mean.reshape(1, 1, 3)
+			target_std = target_std.reshape(1, 1, 3)
 
-			target_mean, target_std = self._get_mean_and_std(self.target_cvimages[n])
+			adjusted = (((target - target_mean) / target_std) * ref_std) + ref_mean
+			adjusted = np.clip(np.round(adjusted), 0, 255).astype(np.uint8)
 
-			height, width, channel = self.target_cvimages[n].shape
-			for i in range(0,height):
-				for j in range(0,width):
-					for k in range(0,channel):
-						x = self.target_cvimages[n][i,j,k]
-						x = ((x-target_mean[k])*(ref_std[k]/target_std[k]))+ref_mean[k]
-						x = round(x)
-						x = 0 if x<0 else x
-						x = 255 if x>255 else x
-						self.target_cvimages[n][i,j,k] = x
-
-			self.target_cvimages[n] = cv2.cvtColor(self.target_cvimages[n], cv2.COLOR_LAB2BGR)
+			self.target_cvimages[n] = cv2.cvtColor(adjusted, cv2.COLOR_LAB2BGR)
 
 	def export_images_and_zip_base64(self) -> dict:
 		image_entries = []
