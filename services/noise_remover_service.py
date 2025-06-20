@@ -1,33 +1,15 @@
 import numpy as np
 import cv2
-import os
-from io import BytesIO
-import zipfile
-import base64
 import ctypes
-import platform
+from services.common.interface_service import InterfaceService
+from services.common.load_third_party_lib import load_third_party_lib
 
-if platform.system() == "Windows":
-    lib_path = os.path.join("services", "3rd_party_libs", "nr_libbm3d.dll")
-else:
-    lib_path = os.path.join("services", "3rd_party_libs", "nr_libbm3d.so")
-
-# 라이브러리 로드
-bm3d = ctypes.CDLL(lib_path)
-
-bm3d.run_bm3d_yuv_memory.argtypes = [
-	ctypes.POINTER(ctypes.c_ubyte),
-	ctypes.POINTER(ctypes.c_ubyte),
-	ctypes.c_int, ctypes.c_int, ctypes.c_int
-]
-bm3d.run_bm3d_yuv_memory.restype = ctypes.c_int
-
-class NoiseRemoverService():
+class NoiseRemoverService(InterfaceService):
 
 	def __init__(self, targets_bytes, targets_fname):
 		self.targets_bytes = targets_bytes
-		self.targets_fname = targets_fname
-		self.target_cvimages = []
+		self.bm3d = load_third_party_lib("bm3d", "run_bm3d_yuv_memory")
+		super().__init__(targets_fname)
 
 	def processing(self) -> np.ndarray:
 		for n in range(len(self.targets_bytes)):
@@ -48,7 +30,7 @@ class NoiseRemoverService():
 				input_ptr = input_buf.ctypes.data_as(ctypes.POINTER(ctypes.c_ubyte))
 				output_ptr = output_buf.ctypes.data_as(ctypes.POINTER(ctypes.c_ubyte))
 
-				bm3d.run_bm3d_yuv_memory(input_ptr, output_ptr, w, h, 1)
+				self.bm3d(input_ptr, output_ptr, w, h, 1)
 
 				result_img = output_buf
 
@@ -70,7 +52,7 @@ class NoiseRemoverService():
 				input_ptr = input_buf.ctypes.data_as(ctypes.POINTER(ctypes.c_ubyte))
 				output_ptr = output_buf.ctypes.data_as(ctypes.POINTER(ctypes.c_ubyte))
 
-				bm3d.run_bm3d_yuv_memory(input_ptr, output_ptr, w, h, 3)
+				self.bm3d(input_ptr, output_ptr, w, h, 3)
 
 				y_out = output_buf[0:w*h].reshape((h, w))
 				cr_out = output_buf[w*h:2*w*h].reshape((h, w))
@@ -79,30 +61,4 @@ class NoiseRemoverService():
 				yuv_out = np.stack([y_out, cr_out, cb_out], axis=2).astype(np.uint8)
 				result_img = cv2.cvtColor(yuv_out, cv2.COLOR_YCrCb2BGR)
 
-			self.target_cvimages.append(result_img)
-
-	def export_results_base64(self) -> dict:
-		image_entries = []
-		zip_buffer = BytesIO()
-
-		with zipfile.ZipFile(zip_buffer, 'w') as zipf:
-			for n, img in enumerate(self.target_cvimages):
-				name, ext = os.path.splitext(os.path.basename(self.targets_fname[n]))
-				success, encoded_img = cv2.imencode(ext, img)
-				if success:
-					img_bytes = encoded_img.tobytes()
-
-					zipf.writestr(f'result/{name}{ext}', img_bytes)
-
-					image_entries.append({
-						"filename": f"{name}{ext}",
-						"data": base64.b64encode(img_bytes).decode('utf-8')
-					})
-
-		zip_buffer.seek(0)
-		zip_base64 = base64.b64encode(zip_buffer.read()).decode('utf-8')
-
-		return {
-			"images": image_entries,
-			"zip": zip_base64
-		}
+			self.target_images.append(result_img)
