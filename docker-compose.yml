@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   app:
@@ -23,8 +23,17 @@ services:
       - "443:443"
     depends_on:
       - app
+      - certbot
     networks:
       - app-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./docker/certbot/www:/var/www/certbot
+      - ./docker/certbot/conf:/etc/letsencrypt
+      - ./docker/certbot/log:/var/log/letsencrypt
 
 networks:
   app-network:
