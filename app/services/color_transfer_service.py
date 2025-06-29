@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from services.common.interface_service import InterfaceService
+from .common.interface_service import InterfaceService
 
 class ColorTransferService(InterfaceService):
 

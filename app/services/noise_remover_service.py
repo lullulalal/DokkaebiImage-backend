@@ -1,8 +1,8 @@
 import numpy as np
 import cv2
 import ctypes
-from services.common.interface_service import InterfaceService
-from services.common.load_third_party_lib import load_third_party_lib
+from .common.interface_service import InterfaceService
+from .common.load_third_party_lib import load_third_party_lib
 
 class NoiseRemoverService(InterfaceService):
 

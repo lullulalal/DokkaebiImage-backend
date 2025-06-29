@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 from fastapi import File, UploadFile
-from services.noise_remover_service import NoiseRemoverService
+from ..services.noise_remover_service import NoiseRemoverService
 from typing import List
 from fastapi.responses import JSONResponse
 
