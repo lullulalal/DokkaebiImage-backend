@@ -3,7 +3,7 @@ services:
   fastapi-app:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     expose:
       - 8000
     networks:
@@ -13,9 +13,9 @@ services:
     image: nginx:latest
     container_name: nginx
     volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/certbot/www:/var/www/certbot
-      - ./docker/certbot/conf:/etc/letsencrypt
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
     ports:
       - "80:80"
       - "443:443"
@@ -29,9 +29,9 @@ services:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - ./docker/certbot/www:/var/www/certbot
-      - ./docker/certbot/conf:/etc/letsencrypt
-      - ./docker/certbot/log:/var/log/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/log:/var/log/letsencrypt
 
 networks:
   app-network:
