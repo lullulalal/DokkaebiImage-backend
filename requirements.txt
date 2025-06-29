@@ -1,2 +1,2 @@
 fastapi[standard]
-opencv-python
+opencv-python-headless

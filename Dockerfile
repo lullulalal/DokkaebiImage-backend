@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.12-slim-bullseye
 
 WORKDIR /fastapi-app
 COPY requirements.txt .
