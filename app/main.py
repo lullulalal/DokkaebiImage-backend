@@ -10,9 +10,9 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://lullulalal.github.io",  # ✅ GitHub Pages 도메인
+        "https://lullulalal.github.io",
     ],
-    allow_origin_regex=r"http://localhost:\d+",          # ✅ 포트가 바뀌는 로컬 개발환경
+    allow_origin_regex=r"http://localhost:\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
