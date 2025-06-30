@@ -20,7 +20,9 @@ def load_third_party_lib(algo_name: str, func_name: str):
     else:
         lib_filename = f"nr_lib{algo_name}.so"
 
-    lib_path = os.path.join("services", "3rd_party_libs", lib_filename)
+    CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+    lib_path = os.path.join(CURRENT_DIR, "..", "3rd_party_libs", lib_filename)
+    lib_path = os.path.abspath(lib_path)
 
     if not os.path.exists(lib_path):
         raise FileNotFoundError(f"Library file not found: {lib_path}")
