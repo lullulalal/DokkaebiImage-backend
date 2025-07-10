@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routes import color_transfer
 from .routes import noise_remover
 
-app = FastAPI()
+app = FastAPI(root_path="/dokkaebiimage")
 
 app.add_middleware(
     CORSMiddleware,
