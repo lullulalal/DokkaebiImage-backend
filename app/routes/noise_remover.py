@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse
 router = APIRouter()
 
 @router.post("/noiseRemover")
-async def color_transfer(
+async def noise_remover(
     targets: List[UploadFile] = File(...),
 ):
     # Target images
